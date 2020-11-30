@@ -2,13 +2,16 @@ package com.example.githubapi.ui
 
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.activityViewModels
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.githubapi.databinding.MainActivityBinding
 import com.example.githubapi.ui.bookmark.BookmarkFragment
 import com.example.githubapi.ui.result.ResultFragment
+import com.example.githubapi.ui.result.ResultViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -16,6 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var imm: InputMethodManager
     private lateinit var searchClickListener: OnClickSearch
+    private val viewModel: ResultViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +30,8 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         setLayout(binding)
+
+        viewModel.bookmarkList
     }
 
     private fun setLayout(binding: MainActivityBinding) {

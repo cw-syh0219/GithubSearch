@@ -6,17 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.databinding.BaseFragmentBinding
 import com.example.githubapi.ui.MainActivity
+import com.example.githubapi.ui.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 abstract class BaseFragment : Fragment(),
     BaseListAdapter.BaseClickListener, MainActivity.OnClickSearch {
     private lateinit var binding: BaseFragmentBinding
-    private val viewModel: BaseViewModel by viewModels()
+    private val viewModel: BaseViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +45,10 @@ abstract class BaseFragment : Fragment(),
         }
     }
 
+    override fun clickedBookmark(isAdd: Boolean, item: GithubRepo) {
+        viewModel.clickedBookmark(isAdd, item)
+    }
+
     abstract fun setObserver()
 
     abstract fun getItemAdapter(listener: BaseListAdapter.BaseClickListener): BaseListAdapter
@@ -49,7 +56,7 @@ abstract class BaseFragment : Fragment(),
     private fun getLayoutManager(): LinearLayoutManager =
         LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
-    override fun onClicked(item: Any) {
+    override fun clickedItem(item: Any) {
         Toast.makeText(activity, "Click | ${item}", Toast.LENGTH_SHORT).show()
     }
 

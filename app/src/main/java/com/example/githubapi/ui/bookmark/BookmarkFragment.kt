@@ -1,6 +1,9 @@
 package com.example.githubapi.ui.bookmark
 
+import android.util.Log
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.ui.base.BaseFragment
 import com.example.githubapi.ui.base.BaseListAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,19 +19,16 @@ class BookmarkFragment : BaseFragment() {
     }
 
     override fun setObserver() {
-//        viewModel.repoList.observe(viewLifecycleOwner, Observer {
-//            when (it.status) {
-//                Resource.Status.SUCCESS -> {
-//                    print("Success Called")
-//                    adapter.setItemList(it.data!!.items)
-//                }
-//                Resource.Status.ERROR -> print("TEST")
-//                Resource.Status.LOADING -> print("LOADING")
-//            }
-//        })
+        viewModel.bookmarkList.observe(viewLifecycleOwner, Observer {
+            Log.d(TAG, "bookmarkList observer called")
+            adapter.setItemList(ArrayList(it))
+        })
     }
 
     override fun clickSearch(search: String) {
-        TODO("Not yet implemented")
+    }
+
+    companion object {
+        const val TAG: String = "BookmarkFragment"
     }
 }

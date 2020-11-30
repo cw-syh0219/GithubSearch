@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.ui.MainActivity
 import com.example.githubapi.ui.base.BaseFragment
 import com.example.githubapi.ui.base.BaseListAdapter
@@ -31,7 +32,6 @@ class ResultFragment : BaseFragment() {
         viewModel.repoList.observe(viewLifecycleOwner, Observer {
             when (it.status) {
                 Resource.Status.SUCCESS -> {
-                    println("Success Called")
                     adapter.setItemList(ArrayList(it.data!!.items))
                 }
                 Resource.Status.ERROR -> println("ERROR | ${it.message} | ${it.status}")

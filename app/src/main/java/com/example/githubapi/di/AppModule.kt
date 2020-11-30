@@ -1,5 +1,8 @@
 package com.example.githubapi.di
 
+import android.content.Context
+import com.example.githubapi.data.local.AppDatabase
+import com.example.githubapi.data.local.RepositoryDao
 import com.example.githubapi.data.remote.GithubRemoteDataSource
 import com.example.githubapi.data.remote.GithubService
 import com.example.githubapi.data.repository.GithubRepository
@@ -9,6 +12,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -44,6 +48,17 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideRepository(remoteDataSource: GithubRemoteDataSource) =
-        GithubRepository(remoteDataSource)
+    fun provideRepository(
+        remoteDataSource: GithubRemoteDataSource,
+        localDataSource: RepositoryDao
+    ) = GithubRepository(remoteDataSource, localDataSource)
+
+    @Singleton
+    @Provides
+    fun provideDatabase(@ApplicationContext appContext: Context) =
+        AppDatabase.getDatabase(appContext)
+
+    @Singleton
+    @Provides
+    fun provideCharacterDao(db: AppDatabase) = db.repositoryDao()
 }

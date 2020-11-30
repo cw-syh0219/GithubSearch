@@ -3,43 +3,38 @@ package com.example.githubapi.ui.result
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.CheckBox
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.databinding.MainItemBinding
 import com.example.githubapi.ui.base.BaseListAdapter
-import java.util.*
 
-class ResultListAdapter(baseClickListener: BaseClickListener) : BaseListAdapter(baseClickListener) {
-    private val itemList = ArrayList<GithubRepo>()
-    private lateinit var binding: MainItemBinding
-
+class ResultListAdapter(var baseClickListener: BaseClickListener) :
+    BaseListAdapter(baseClickListener) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseHolder {
         binding = MainItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MainViewHolder(binding)
+        return MainViewHolder(binding, baseClickListener)
     }
 
-    override fun onBindViewHolder(holder: BaseHolder, position: Int) {
-        val repo: GithubRepo = itemList[position]
-
-        holder.bind(position, repo)
-    }
-
-    override fun getItemCount(): Int = itemList.size
-
-    fun setItemList(itemList: ArrayList<GithubRepo>) {
-        this.itemList.clear()
-        this.itemList.addAll(itemList)
-        this.notifyDataSetChanged()
-
-        println(itemList)
-    }
-
-    inner class MainViewHolder(private val itemBinding: MainItemBinding) :
+    inner class MainViewHolder(
+        private val itemBinding: MainItemBinding,
+        private val baseClickListener: BaseClickListener
+    ) :
         BaseListAdapter.BaseHolder(itemBinding) {
+
+        lateinit var repo: GithubRepo;
+
+        init {
+            itemBinding.mainItemCheckBookmark.setOnClickListener {
+                baseClickListener.clickedBookmark((it as CheckBox).isChecked, repo)
+            }
+        }
 
         @SuppressLint("SetTextI18n")
         override fun bind(position: Int, repo: GithubRepo) {
+            this.repo = repo
+
             Glide.with(itemBinding.root)
                 .load(repo.owner.avatar_url)
                 .transform(CircleCrop())
@@ -47,6 +42,7 @@ class ResultListAdapter(baseClickListener: BaseClickListener) : BaseListAdapter(
 
             itemBinding.mainItemRepoName.text = "$position ${repo.name}"
             itemBinding.mainItemRepoOwner.text = repo.owner.login
+            itemBinding.mainItemCheckBookmark.isChecked = repo.isBookmark
         }
     }
 }
