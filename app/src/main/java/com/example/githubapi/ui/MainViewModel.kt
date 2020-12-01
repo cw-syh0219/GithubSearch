@@ -25,7 +25,7 @@ open class MainViewModel @ViewModelInject constructor(
         println("clickedBookmark | $isAdd $item")
 
         when (isAdd) {
-             true -> addBookmark(item)
+            true -> addBookmark(item)
             false -> removeBookmark(item)
         }
     }
@@ -44,7 +44,11 @@ open class MainViewModel @ViewModelInject constructor(
 
     fun isBookmark(repo: GithubRepo): Boolean {
         val isBookmark = bookmarkList.value?.contains(repo) ?: false
-        println("isBookmark | $isBookmark $bookmarkList ${bookmarkList.value}")
+        println("isBookmark | $isBookmark ${bookmarkList.value}")
         return isBookmark
     }
+
+//    companion object {
+//        lateinit var bookmarkList: List<GithubRepo>
+//    }
 }

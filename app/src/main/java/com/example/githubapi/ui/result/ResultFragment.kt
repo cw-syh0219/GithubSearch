@@ -6,6 +6,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.ui.MainActivity
+import com.example.githubapi.ui.MainViewModel
 import com.example.githubapi.ui.base.BaseFragment
 import com.example.githubapi.ui.base.BaseListAdapter
 import com.example.githubapi.util.Resource
@@ -14,6 +15,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ResultFragment : BaseFragment() {
     private val viewModel: ResultViewModel by activityViewModels()
+
     private lateinit var adapter: ResultListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

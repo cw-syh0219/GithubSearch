@@ -1,12 +1,14 @@
 package com.example.githubapi.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.githubapi.databinding.MainActivityBinding
 import com.example.githubapi.ui.bookmark.BookmarkFragment
@@ -31,7 +33,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setLayout(binding)
 
-        viewModel.bookmarkList
+        viewModel.bookmarkList.observe(this, Observer {
+            println("Default call bookmark List")
+        })
     }
 
     private fun setLayout(binding: MainActivityBinding) {

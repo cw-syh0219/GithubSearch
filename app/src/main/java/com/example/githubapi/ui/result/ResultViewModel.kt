@@ -14,13 +14,14 @@ import kotlinx.coroutines.withContext
 class ResultViewModel @ViewModelInject constructor(
     private val repository: GithubRepository
 ) : MainViewModel(repository) {
-
     private val _repoList = MutableLiveData<Resource<GithubRepoList>>()
     val repoList: LiveData<Resource<GithubRepoList>>
         get() {
             return _repoList.map {
-                for (repo in it.data!!.items) {
-                    repo.isBookmark = this.isBookmark(repo)
+                it.data?.items?.let { items ->
+                    for (repo in items) {
+                        repo.isBookmark = this.isBookmark(repo)
+                    }
                 }
                 return@map it;
             }
