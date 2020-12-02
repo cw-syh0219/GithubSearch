@@ -1,6 +1,8 @@
 package com.example.githubapi.ui.base
 
 import android.view.View
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.githubapi.data.entites.GithubRepo
@@ -8,7 +10,8 @@ import com.example.githubapi.databinding.MainItemBinding
 import java.util.ArrayList
 
 abstract class BaseListAdapter(private val baseClickListener: BaseClickListener) :
-    RecyclerView.Adapter<BaseListAdapter.BaseHolder>() {
+    PagingDataAdapter<GithubRepo, BaseListAdapter.BaseHolder>(POST_COMPARATOR) {
+    //    RecyclerView.Adapter<BaseListAdapter.BaseHolder>() {
     private val itemList = ArrayList<GithubRepo>()
     protected lateinit var binding: MainItemBinding
 
@@ -46,5 +49,31 @@ abstract class BaseListAdapter(private val baseClickListener: BaseClickListener)
         fun clickedItem(item: Any)
 
         fun clickedBookmark(isAdd: Boolean, item: GithubRepo)
+    }
+
+    companion object {
+        private val PAYLOAD_SCORE = Any()
+        val POST_COMPARATOR = object : DiffUtil.ItemCallback<GithubRepo>() {
+            override fun areContentsTheSame(oldItem: GithubRepo, newItem: GithubRepo): Boolean =
+                oldItem == newItem
+
+            override fun areItemsTheSame(oldItem: GithubRepo, newItem: GithubRepo): Boolean =
+                oldItem.name == newItem.name
+
+            override fun getChangePayload(oldItem: GithubRepo, newItem: GithubRepo): Any? {
+                return if (sameExceptScore(oldItem, newItem)) {
+                    PAYLOAD_SCORE
+                } else {
+                    null
+                }
+            }
+        }
+
+        private fun sameExceptScore(oldItem: GithubRepo, newItem: GithubRepo): Boolean {
+            // DON'T do this copy in a real app, it is just convenient here for the demo :)
+            // because reddit randomizes scores, we want to pass it as a payload to minimize
+            // UI updates between refreshes
+            return oldItem.copy(id = newItem.id) == newItem
+        }
     }
 }

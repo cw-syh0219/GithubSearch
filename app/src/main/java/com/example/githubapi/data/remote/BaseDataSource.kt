@@ -1,10 +1,12 @@
 package com.example.githubapi.data.remote
 
 import android.util.Log
+import androidx.paging.PagingSource
+import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.util.Resource
 import retrofit2.Response
 
-abstract class BaseDataSource {
+abstract class BaseDataSource : PagingSource<Int, GithubRepo>() {
 
     protected suspend fun <T> getResult(call: suspend () -> Response<T>): Resource<T> {
         try {

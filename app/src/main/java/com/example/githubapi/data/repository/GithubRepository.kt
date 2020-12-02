@@ -1,22 +1,32 @@
 package com.example.githubapi.data.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.githubapi.data.entites.GithubRepo
-import com.example.githubapi.data.entites.GithubRepoList
 import com.example.githubapi.data.local.RepositoryDao
 import com.example.githubapi.data.remote.GithubRemoteDataSource
-import com.example.githubapi.util.Resource
-import retrofit2.Response
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GithubRepository @Inject constructor(
     private val githubRemoteDataSource: GithubRemoteDataSource,
     private val githubLocalDataSource: RepositoryDao
 ) {
-    suspend fun findRepository(search: String): Resource<GithubRepoList> {
-        return githubRemoteDataSource.findRepository(search);
+//    suspend fun findRepository(search: String): Resource<GithubRepoList> {
+//        return githubRemoteDataSource.findRepository(search);
+//    }
+
+    suspend fun findRepository(search: String): Flow<PagingData<GithubRepo>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 10,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = githubRemoteDataSource.load(search, 0) // TODO()
+        ).flow
     }
 
     suspend fun addBookmark(repo: GithubRepo) {
