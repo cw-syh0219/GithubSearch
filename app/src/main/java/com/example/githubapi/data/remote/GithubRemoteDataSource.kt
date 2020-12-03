@@ -1,31 +1,29 @@
 package com.example.githubapi.data.remote
 
-import androidx.paging.PagingData
 import com.example.githubapi.data.entites.GithubRepo
-import kotlinx.coroutines.flow.Flow
+import com.example.githubapi.data.repository.GithubRepository.Companion.PAGE_SIZE
 import javax.inject.Inject
 
 class GithubRemoteDataSource @Inject constructor(
-    private val githubService: GithubService
+    private val githubService: GithubService,
+    private val search: String
 ) : BaseDataSource() {
-    suspend fun findRepository() = getResult {
-        githubService.getAllRepository()
-    }
-
-    suspend fun findRepository(search: String, page: Int = 1): Flow<PagingData<GithubRepo>> {
-        return githubService.getSearchRepository(search, page)
-    }
-//    suspend fun getCharacter(id: Int) = getResult { characterService.getCharacter(id) }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GithubRepo> {
         val curPage = params.key ?: 1
+        var nextKey: Int? = curPage + 1
 
         return try {
-            val response = githubService.getSearchRepository("TEST", curPage)
+            println("load called")
+            val response = githubService.getSearchRepository(search, curPage)
+            if (response.total_count < curPage * PAGE_SIZE) {
+                nextKey = null
+            }
+
             LoadResult.Page(
-                data = response,    // TODO()
+                data = response.items,
                 prevKey = null,
-                nextKey = curPage + 1
+                nextKey = nextKey
             )
         } catch (e: Exception) {
             return LoadResult.Error(e)

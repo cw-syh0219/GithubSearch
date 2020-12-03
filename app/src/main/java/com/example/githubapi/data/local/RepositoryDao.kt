@@ -1,6 +1,7 @@
 package com.example.githubapi.data.local
 
 import androidx.lifecycle.LiveData
+import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -10,7 +11,7 @@ import com.example.githubapi.data.entites.GithubRepo
 @Dao
 interface RepositoryDao {
     @Query("SELECT * FROM github_repo")
-    fun getAllBookmark(): LiveData<List<GithubRepo>>
+    fun getAllBookmark(): PagingSource<Int, GithubRepo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBookmark(repo: GithubRepo)

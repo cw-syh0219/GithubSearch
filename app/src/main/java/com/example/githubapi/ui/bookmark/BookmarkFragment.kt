@@ -1,14 +1,17 @@
 package com.example.githubapi.ui.bookmark
 
-import android.util.Log
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.example.githubapi.data.entites.GithubRepo
-import com.example.githubapi.ui.MainViewModel
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.map
+import androidx.paging.PagedList
+import androidx.paging.PagingData
 import com.example.githubapi.ui.base.BaseFragment
 import com.example.githubapi.ui.base.BaseListAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class BookmarkFragment : BaseFragment() {
@@ -22,8 +25,9 @@ class BookmarkFragment : BaseFragment() {
 
     override fun setObserver() {
         viewModel.bookmarkList.observe(viewLifecycleOwner, Observer {
-            Log.d(TAG, "bookmarkList observer called")
-            adapter.setItemList(ArrayList(it))
+            lifecycleScope.launchWhenCreated {
+                adapter.submitData(it)
+            }
         })
     }
 

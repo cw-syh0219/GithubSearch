@@ -41,17 +41,17 @@ object AppModule {
     fun provideGithubService(retrofit: Retrofit): GithubService =
         retrofit.create(GithubService::class.java)
 
-    @Singleton
-    @Provides
-    fun provideGithubRemoteDataSource(githubService: GithubService) =
-        GithubRemoteDataSource(githubService)
+//    @Singleton
+//    @Provides
+//    fun provideGithubRemoteDataSource(githubService: GithubService) =
+//        GithubRemoteDataSource(githubService)
 
     @Singleton
     @Provides
     fun provideRepository(
-        remoteDataSource: GithubRemoteDataSource,
-        localDataSource: RepositoryDao
-    ) = GithubRepository(remoteDataSource, localDataSource)
+        githubService: GithubService,
+        githubLocalDataSource: RepositoryDao
+    ) = GithubRepository(githubService, githubLocalDataSource)
 
     @Singleton
     @Provides

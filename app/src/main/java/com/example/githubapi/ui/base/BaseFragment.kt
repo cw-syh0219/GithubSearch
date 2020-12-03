@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.githubapi.data.entites.GithubRepo
@@ -15,6 +16,9 @@ import com.example.githubapi.databinding.BaseFragmentBinding
 import com.example.githubapi.ui.MainActivity
 import com.example.githubapi.ui.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.launch
 
 abstract class BaseFragment : Fragment(),
     BaseListAdapter.BaseClickListener, MainActivity.OnClickSearch {
