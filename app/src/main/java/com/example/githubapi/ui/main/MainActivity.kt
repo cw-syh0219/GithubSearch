@@ -1,4 +1,4 @@
-package com.example.githubapi.ui
+package com.example.githubapi.ui.main
 
 import android.os.Bundle
 import android.view.KeyEvent
@@ -8,21 +8,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.githubapi.databinding.MainActivityBinding
-import com.example.githubapi.ui.bookmark.BookmarkFragment
-import com.example.githubapi.ui.result.ResultFragment
-import com.example.githubapi.ui.result.ResultViewModel
+import com.example.githubapi.ui.main.bookmark.BookmarkFragment
+import com.example.githubapi.ui.main.result.ResultFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var imm: InputMethodManager
     private lateinit var searchClickListener: OnClickSearch
-    private val viewModel: ResultViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
-        override fun getItemCount(): Int = NUM_PAGES
+        override fun getItemCount(): Int = VIEW_PAGER_PAGE_COUNT
 
         override fun createFragment(position: Int): Fragment =
             if (position % 2 == 0) ResultFragment() else BookmarkFragment()
@@ -81,6 +78,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val NUM_PAGES = 2
+        const val VIEW_PAGER_PAGE_COUNT = 2
     }
 }

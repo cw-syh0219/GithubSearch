@@ -1,20 +1,19 @@
-package com.example.githubapi.ui.result
+package com.example.githubapi.ui.main.result
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import com.example.githubapi.ui.MainActivity
-import com.example.githubapi.ui.base.BaseFragment
-import com.example.githubapi.ui.base.BaseListAdapter
+import com.example.githubapi.ui.main.MainActivity
+import com.example.githubapi.ui.main.MainViewModel
+import com.example.githubapi.ui.main.base.BaseFragment
+import com.example.githubapi.ui.main.base.BaseListAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ResultFragment : BaseFragment() {
-    private val viewModel: ResultViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
     private lateinit var adapter: ResultListAdapter
 
@@ -32,9 +31,7 @@ class ResultFragment : BaseFragment() {
 
     override fun setObserver() {
         viewModel.searchList.observe(viewLifecycleOwner, Observer {
-            lifecycleScope.launchWhenCreated {
-                adapter.submitData(it)
-            }
+            adapter.submitData(lifecycle, it)
         })
     }
 

@@ -29,7 +29,7 @@ object AppModule {
         .addConverterFactory(GsonConverterFactory.create(gson))
         .client(OkHttpClient.Builder().apply {
             addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BASIC
+                level = HttpLoggingInterceptor.Level.BODY
             })
         }.build())
         .build()

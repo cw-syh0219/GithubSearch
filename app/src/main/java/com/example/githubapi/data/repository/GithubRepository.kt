@@ -1,18 +1,14 @@
 package com.example.githubapi.data.repository
 
-import androidx.lifecycle.LiveData
 import androidx.paging.*
+import com.example.githubapi.data.entites.Commit
+import com.example.githubapi.data.entites.Commits
 import com.example.githubapi.data.entites.GithubRepo
-import com.example.githubapi.data.entites.GithubRepoList
 import com.example.githubapi.data.local.RepositoryDao
+import com.example.githubapi.data.remote.CommitRemoteDataSource
 import com.example.githubapi.data.remote.GithubRemoteDataSource
 import com.example.githubapi.data.remote.GithubService
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class GithubRepository @Inject constructor(
@@ -46,6 +42,19 @@ class GithubRepository @Inject constructor(
 
     suspend fun removeBookmark(id: Int) {
         githubRepositoryDao.removeBookmark(id)
+    }
+
+    fun getCommitList(owner: String, repo: String): Flow<PagingData<Commits>> {
+        return Pager(
+            PagingConfig(
+                pageSize = PAGE_SIZE,
+            )
+        ) {
+            CommitRemoteDataSource(
+                githubService = githubService,
+                owner, repo
+            )
+        }.flow
     }
 
     companion object {

@@ -1,4 +1,4 @@
-package com.example.githubapi.ui
+package com.example.githubapi.ui.main
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
@@ -40,13 +40,13 @@ open class MainViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             repository.addBookmark(repo)
         }
-
-        searchList.value = searchList.value?.map { repository ->
-            if (repository.id == repo.id) {
-                repository.isBookmark = true
-            }
-            repository
-        }
+//
+//        searchList.value = searchList.value?.map { repository ->
+//            if (repository.id == repo.id) {
+//                repository.isBookmark = true
+//            }
+//            repository
+//        }
     }
 
     private fun removeBookmark(repo: GithubRepo) {
@@ -54,12 +54,12 @@ open class MainViewModel @ViewModelInject constructor(
             repository.removeBookmark(repo.id)
         }
 
-        searchList.value = searchList.value?.map { it ->
-            if (it.id == repo.id) {
-                it.isBookmark = false
-            }
-            it
-        }
+//        searchList.value = searchList.value?.map { it ->
+//            if (it.id == repo.id) {
+//                it.isBookmark = false
+//            }
+//            it
+//        }
     }
 
     companion object {

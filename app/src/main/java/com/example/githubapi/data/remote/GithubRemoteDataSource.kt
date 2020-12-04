@@ -1,5 +1,6 @@
 package com.example.githubapi.data.remote
 
+import androidx.paging.PagingSource
 import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.data.repository.GithubRepository.Companion.PAGE_SIZE
 import javax.inject.Inject
@@ -7,7 +8,7 @@ import javax.inject.Inject
 class GithubRemoteDataSource @Inject constructor(
     private val githubService: GithubService,
     private val search: String
-) : BaseDataSource() {
+) : PagingSource<Int, GithubRepo>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, GithubRepo> {
         val curPage = params.key ?: 1

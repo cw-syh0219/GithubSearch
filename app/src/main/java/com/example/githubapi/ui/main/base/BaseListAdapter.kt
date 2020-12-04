@@ -1,9 +1,8 @@
-package com.example.githubapi.ui.base
+package com.example.githubapi.ui.main.base
 
 import android.view.View
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.example.githubapi.data.entites.GithubRepo
@@ -12,19 +11,10 @@ import java.util.*
 
 abstract class BaseListAdapter(private val baseClickListener: BaseClickListener) :
     PagingDataAdapter<GithubRepo, BaseListAdapter.BaseHolder>(REPO_COMPARATOR) {
-    //    RecyclerView.Adapter<BaseListAdapter.BaseHolder>() {
     protected lateinit var binding: MainItemBinding
 
     abstract inner class BaseHolder(binding: ViewBinding) :
-        RecyclerView.ViewHolder(binding.root), View.OnClickListener {
-
-        init {
-            binding.root.setOnClickListener(this)
-        }
-
-        override fun onClick(v: View?) {
-            baseClickListener.clickedItem(v!!)
-        }
+        RecyclerView.ViewHolder(binding.root) {
 
         abstract fun bind(position: Int, repo: GithubRepo)
     }
@@ -36,18 +26,8 @@ abstract class BaseListAdapter(private val baseClickListener: BaseClickListener)
         holder.bind(position, repo)
     }
 
-//    override fun getItemCount(): Int = itemList.size
-//
-//    fun setItemList(itemList: ArrayList<GithubRepo>) {
-//        this.itemList.clear()
-//        this.itemList.addAll(itemList)
-//        this.notifyDataSetChanged()
-//
-//        println(itemList)
-//    }
-
     interface BaseClickListener {
-        fun clickedItem(item: Any)
+        fun clickedItem(repo: GithubRepo)
 
         fun clickedBookmark(isAdd: Boolean, item: GithubRepo)
     }
