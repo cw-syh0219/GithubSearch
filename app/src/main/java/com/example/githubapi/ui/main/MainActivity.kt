@@ -31,8 +31,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setLayout(binding)
 
-        viewModel.bookmarkList.observe(this, Observer {
-            println("Default request Bookmark database")
+        viewModel.bookmarkLiveData.observe(this, Observer {
+            println("Default request Bookmark database1")
+        })
+
+        viewModel.bookmarkFlowData.observe(this, Observer {
+            println("Default request Bookmark database2")
         })
     }
 

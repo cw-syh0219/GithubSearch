@@ -2,7 +2,6 @@ package com.example.githubapi.ui.main.bookmark
 
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.example.githubapi.ui.main.MainViewModel
 import com.example.githubapi.ui.main.base.BaseFragment
 import com.example.githubapi.ui.main.base.BaseListAdapter
@@ -19,7 +18,7 @@ class BookmarkFragment : BaseFragment() {
     }
 
     override fun setObserver() {
-        viewModel.bookmarkList.observe(viewLifecycleOwner, Observer {
+        viewModel.bookmarkFlowData.observe(viewLifecycleOwner, Observer {
             adapter.submitData(lifecycle, it)
         })
     }

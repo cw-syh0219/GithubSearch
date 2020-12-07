@@ -1,7 +1,7 @@
 package com.example.githubapi.data.repository
 
+import androidx.lifecycle.LiveData
 import androidx.paging.*
-import com.example.githubapi.data.entites.Commit
 import com.example.githubapi.data.entites.Commits
 import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.data.local.RepositoryDao
@@ -28,12 +28,16 @@ class GithubRepository @Inject constructor(
         }.flow
     }
 
-    fun getBookmarkList(): Flow<PagingData<GithubRepo>> {
+    fun getBookmarkFlow(): Flow<PagingData<GithubRepo>> {
         return Pager(
             PagingConfig(PAGE_SIZE)
         ) {
-            githubRepositoryDao.getAllBookmark()
+            githubRepositoryDao.getBookmarkFlow()
         }.flow
+    }
+
+    fun getBookmarkList(): List<GithubRepo> {
+        return githubRepositoryDao.getAllBookmarkList()
     }
 
     suspend fun addBookmark(repo: GithubRepo) {

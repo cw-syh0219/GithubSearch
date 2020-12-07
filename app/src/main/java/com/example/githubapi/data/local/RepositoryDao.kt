@@ -11,7 +11,10 @@ import com.example.githubapi.data.entites.GithubRepo
 @Dao
 interface RepositoryDao {
     @Query("SELECT * FROM github_repo")
-    fun getAllBookmark(): PagingSource<Int, GithubRepo>
+    fun getBookmarkFlow(): PagingSource<Int, GithubRepo>
+
+    @Query("SELECT * FROM github_repo")
+    fun getAllBookmarkList(): List<GithubRepo>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBookmark(repo: GithubRepo)

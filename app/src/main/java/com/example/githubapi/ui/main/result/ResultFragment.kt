@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.example.githubapi.ui.main.MainActivity
 import com.example.githubapi.ui.main.MainViewModel
 import com.example.githubapi.ui.main.base.BaseFragment
 import com.example.githubapi.ui.main.base.BaseListAdapter
+import com.example.githubapi.ui.main.base.CustomLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +31,7 @@ class ResultFragment : BaseFragment() {
 
     override fun setObserver() {
         viewModel.searchList.observe(viewLifecycleOwner, Observer {
+            println("YHSON | observer called")
             adapter.submitData(lifecycle, it)
         })
     }

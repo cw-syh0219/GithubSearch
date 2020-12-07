@@ -20,7 +20,7 @@ data class GithubRepo(
     var watchers: String = "",
     var score: Float = 0.0f,
 ) : Parcelable {
-    @Ignore
+//    @Ignore
     var isBookmark: Boolean = false
 
     constructor(parcel: Parcel) : this(

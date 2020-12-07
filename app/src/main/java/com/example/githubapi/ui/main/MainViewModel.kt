@@ -1,28 +1,41 @@
 package com.example.githubapi.ui.main
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import androidx.paging.PagingData
-import androidx.paging.map
+import androidx.paging.*
 import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.data.repository.GithubRepository
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 open class MainViewModel @ViewModelInject constructor(
     private val repository: GithubRepository
 ) : ViewModel() {
     private lateinit var lastSearch: String
+    private var searchFlow: Flow<PagingData<GithubRepo>> = flow { }
+
     var searchList: MutableLiveData<PagingData<GithubRepo>> = MutableLiveData()
-    val bookmarkList = repository.getBookmarkList().asLiveData(Dispatchers.IO)
+    val bookmarkFlowData = repository.getBookmarkFlow().asLiveData(Dispatchers.IO)
+    val bookmarkLiveData = liveData(Dispatchers.IO) {
+        Log.d("TEST", "update Data")
+        bookmarkList = repository.getBookmarkList()
+        emit(bookmarkList)
+    }
+
+    lateinit var bookmarkList: List<GithubRepo>
 
     fun findRepository(search: String) {
         lastSearch = search
 
         viewModelScope.launch {
-            repository.findRepository(search).collectLatest {
-                searchList.value = it
+            searchFlow = repository.findRepository(search)
+            searchFlow.cachedIn(viewModelScope).collectLatest {
+                searchList.value = it.map { searchRepo ->
+                    searchRepo.isBookmark = isBookmark(searchRepo)
+                    searchRepo
+                }
             }
         }
     }
@@ -36,30 +49,37 @@ open class MainViewModel @ViewModelInject constructor(
         }
     }
 
-    private fun addBookmark(repo: GithubRepo) {
+    private fun addBookmark(inputRepo: GithubRepo) {
         viewModelScope.launch {
-            repository.addBookmark(repo)
+            inputRepo.isBookmark = true
+            repository.addBookmark(inputRepo)
         }
-//
-//        searchList.value = searchList.value?.map { repository ->
-//            if (repository.id == repo.id) {
-//                repository.isBookmark = true
-//            }
-//            repository
-//        }
     }
 
-    private fun removeBookmark(repo: GithubRepo) {
+    private fun removeBookmark(inputRepo: GithubRepo) {
         viewModelScope.launch {
-            repository.removeBookmark(repo.id)
-        }
+            inputRepo.isBookmark = false
+            repository.removeBookmark(inputRepo.id)
 
-//        searchList.value = searchList.value?.map { it ->
-//            if (it.id == repo.id) {
-//                it.isBookmark = false
-//            }
-//            it
-//        }
+            searchFlow.cachedIn(viewModelScope).collectLatest {
+                searchList.value = it.map { searchRepo ->
+                    searchRepo.isBookmark = isBookmark(searchRepo)
+                    searchRepo
+                }
+            }
+        }
+    }
+
+    private fun isBookmark(repo: GithubRepo): Boolean {
+        var result = false
+        for (item in bookmarkList) {
+            result = item.id == repo.id
+            if (result) {
+                Log.d("TEST", "isBookmark ${repo.name}")
+                break
+            }
+        }
+        return result
     }
 
     companion object {
