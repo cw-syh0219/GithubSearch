@@ -36,8 +36,6 @@ class LoadStateViewHolder(
         progressBar.isVisible = loadState is LoadState.Loading
         retry.isVisible = loadState is LoadState.Error
         errorMsg.isVisible = loadState is LoadState.Error
-
-        println("YHSON | " + loadState)
     }
 }
 

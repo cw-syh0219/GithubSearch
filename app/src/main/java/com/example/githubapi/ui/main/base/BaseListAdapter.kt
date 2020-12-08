@@ -1,5 +1,6 @@
 package com.example.githubapi.ui.main.base
 
+import android.util.Log
 import android.view.View
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -35,12 +36,12 @@ abstract class BaseListAdapter(private val baseClickListener: BaseClickListener)
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<GithubRepo>() {
             override fun areItemsTheSame(oldItem: GithubRepo, newItem: GithubRepo): Boolean {
-                val result = oldItem.id == newItem.id && oldItem.isBookmark == newItem.isBookmark
-                return result
+                return oldItem.id == newItem.id
             }
 
-            override fun areContentsTheSame(oldItem: GithubRepo, newItem: GithubRepo): Boolean =
-                oldItem == newItem
+            override fun areContentsTheSame(oldItem: GithubRepo, newItem: GithubRepo): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }

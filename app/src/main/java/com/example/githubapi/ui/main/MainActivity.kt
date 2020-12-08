@@ -1,8 +1,10 @@
 package com.example.githubapi.ui.main
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -18,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var imm: InputMethodManager
-    private lateinit var searchClickListener: OnClickSearch
     private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.bookmarkLiveData.observe(this, Observer {
             println("Default request Bookmark database1")
+            viewModel.bookmarkList = it
         })
 
         viewModel.bookmarkFlowData.observe(this, Observer {
@@ -47,7 +49,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.mainSearchBtn.setOnClickListener {
             imm.hideSoftInputFromWindow(it.windowToken, 0)
-            searchClickListener.clickSearch(binding.mainSearchEditText.text.toString())
+            binding.mainViewpager.setCurrentItem(0, true)
+
+            binding.mainSearchEditText.text.toString().let { searchText ->
+                if (TextUtils.isEmpty(searchText)) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Search text is empty",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    viewModel.findRepository(searchText)
+                }
+            }
         }
 
         binding.mainSearchEditText.setOnKeyListener { _, keyCode, event ->
@@ -66,10 +80,6 @@ class MainActivity : AppCompatActivity() {
         }.attach()
     }
 
-    fun setSearchClickListener(listener: OnClickSearch) {
-        searchClickListener = listener
-    }
-
     private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
         override fun getItemCount(): Int = VIEW_PAGER_PAGE_COUNT
 
@@ -77,11 +87,13 @@ class MainActivity : AppCompatActivity() {
             if (position % 2 == 0) ResultFragment() else BookmarkFragment()
     }
 
-    interface OnClickSearch {
-        fun clickSearch(search: String)
-    }
-
     companion object {
         const val VIEW_PAGER_PAGE_COUNT = 2
     }
+
+//    override fun onDestroy() {
+//        super.onDestroy()
+
+//        viewModel.applyWorker()
+//    }
 }

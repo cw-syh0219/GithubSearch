@@ -1,7 +1,9 @@
 package com.example.githubapi.data.repository
 
 import androidx.lifecycle.LiveData
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.example.githubapi.data.entites.Commits
 import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.data.local.RepositoryDao
@@ -36,7 +38,7 @@ class GithubRepository @Inject constructor(
         }.flow
     }
 
-    fun getBookmarkList(): List<GithubRepo> {
+    fun getBookmarkList(): LiveData<List<GithubRepo>> {
         return githubRepositoryDao.getAllBookmarkList()
     }
 
@@ -62,7 +64,7 @@ class GithubRepository @Inject constructor(
     }
 
     companion object {
-        const val TAG: String = "GithubRepository"
+        const val TAG = "GithubRepository "
         const val PAGE_SIZE = 30    //화면에 로드할 개수
     }
 }

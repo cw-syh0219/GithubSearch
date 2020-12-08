@@ -23,10 +23,7 @@ class BookmarkFragment : BaseFragment() {
         })
     }
 
-    override fun clickSearch(search: String) {
-    }
-
     companion object {
-        const val TAG: String = "BookmarkFragment"
+        const val TAG = "BookmarkFragment "
     }
 }

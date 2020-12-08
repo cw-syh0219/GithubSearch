@@ -1,6 +1,7 @@
 package com.example.githubapi.ui.main.result
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.CheckBox
@@ -20,9 +21,7 @@ class ResultListAdapter(var baseClickListener: BaseClickListener) :
     inner class MainViewHolder(
         private val itemBinding: MainItemBinding,
         private val baseClickListener: BaseClickListener
-    ) :
-        BaseListAdapter.BaseHolder(itemBinding) {
-
+    ) : BaseListAdapter.BaseHolder(itemBinding) {
         lateinit var repo: GithubRepo;
 
         init {

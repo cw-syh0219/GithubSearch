@@ -1,14 +1,11 @@
 package com.example.githubapi.ui.main.result
 
-import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import com.example.githubapi.ui.main.MainActivity
 import com.example.githubapi.ui.main.MainViewModel
 import com.example.githubapi.ui.main.base.BaseFragment
 import com.example.githubapi.ui.main.base.BaseListAdapter
-import com.example.githubapi.ui.main.base.CustomLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -17,13 +14,6 @@ class ResultFragment : BaseFragment() {
 
     private lateinit var adapter: ResultListAdapter
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        (activity as MainActivity).setSearchClickListener(this)
-    }
-
-
     override fun getItemAdapter(listener: BaseListAdapter.BaseClickListener): BaseListAdapter {
         adapter = ResultListAdapter(listener)
         return adapter
@@ -31,14 +21,19 @@ class ResultFragment : BaseFragment() {
 
     override fun setObserver() {
         viewModel.searchList.observe(viewLifecycleOwner, Observer {
-            println("YHSON | observer called")
-            adapter.submitData(lifecycle, it)
+            println(TAG + "searchList observe called $it")
+            if (it != null)
+                adapter.submitData(lifecycle, it)
+        })
+
+        viewModel.bookmarkLiveData.observe(viewLifecycleOwner, Observer {
+            println(TAG + "bookmarkLiveData observe called")
+            viewModel.updateSearchList()
+            adapter.notifyDataSetChanged()
         })
     }
 
-    override fun clickSearch(search: String) {
-        println("clickSearch | $search")
-
-        viewModel.findRepository(search)
+    companion object {
+        const val TAG = "ResultFragment "
     }
 }

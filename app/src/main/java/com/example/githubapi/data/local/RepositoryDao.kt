@@ -14,7 +14,7 @@ interface RepositoryDao {
     fun getBookmarkFlow(): PagingSource<Int, GithubRepo>
 
     @Query("SELECT * FROM github_repo")
-    fun getAllBookmarkList(): List<GithubRepo>
+    fun getAllBookmarkList(): LiveData<List<GithubRepo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addBookmark(repo: GithubRepo)

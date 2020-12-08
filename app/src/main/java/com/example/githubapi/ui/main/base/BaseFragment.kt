@@ -18,7 +18,7 @@ import com.example.githubapi.ui.main.MainActivity
 import com.example.githubapi.ui.main.MainViewModel
 
 abstract class BaseFragment : Fragment(),
-    BaseListAdapter.BaseClickListener, MainActivity.OnClickSearch {
+    BaseListAdapter.BaseClickListener {
     public lateinit var binding: BaseFragmentBinding
     private val viewModel: MainViewModel by activityViewModels()
 
@@ -66,6 +66,4 @@ abstract class BaseFragment : Fragment(),
             }
         )
     }
-
-    abstract override fun clickSearch(search: String)
 }

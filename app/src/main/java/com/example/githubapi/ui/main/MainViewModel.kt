@@ -1,30 +1,33 @@
 package com.example.githubapi.ui.main
 
+import android.app.Application
 import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import androidx.paging.*
+import androidx.work.*
 import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.data.repository.GithubRepository
+import com.example.githubapi.util.workManager.BackgroundWorker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 open class MainViewModel @ViewModelInject constructor(
+    application: Application,
     private val repository: GithubRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
     private lateinit var lastSearch: String
     private var searchFlow: Flow<PagingData<GithubRepo>> = flow { }
-
     var searchList: MutableLiveData<PagingData<GithubRepo>> = MutableLiveData()
+
+    var bookmarkList: List<GithubRepo> = mutableListOf()
     val bookmarkFlowData = repository.getBookmarkFlow().asLiveData(Dispatchers.IO)
     val bookmarkLiveData = liveData(Dispatchers.IO) {
-        Log.d("TEST", "update Data")
-        bookmarkList = repository.getBookmarkList()
-        emit(bookmarkList)
+        emitSource(repository.getBookmarkList())
     }
 
-    lateinit var bookmarkList: List<GithubRepo>
+    val workManager = WorkManager.getInstance(getApplication<Application>().applicationContext)
 
     fun findRepository(search: String) {
         lastSearch = search
@@ -60,13 +63,13 @@ open class MainViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             inputRepo.isBookmark = false
             repository.removeBookmark(inputRepo.id)
+        }
+    }
 
-            searchFlow.cachedIn(viewModelScope).collectLatest {
-                searchList.value = it.map { searchRepo ->
-                    searchRepo.isBookmark = isBookmark(searchRepo)
-                    searchRepo
-                }
-            }
+    fun updateSearchList() {
+        searchList.value = searchList.value?.map { searchRepo ->
+            searchRepo.isBookmark = isBookmark(searchRepo)
+            searchRepo
         }
     }
 
@@ -75,14 +78,31 @@ open class MainViewModel @ViewModelInject constructor(
         for (item in bookmarkList) {
             result = item.id == repo.id
             if (result) {
-                Log.d("TEST", "isBookmark ${repo.name}")
+                println(TAG + "isBookmark ${repo.name}")
                 break
             }
         }
         return result
     }
 
+
+    public fun applyWorker() {
+        println(TAG + "applyWorker apply worker")
+
+        val save = OneTimeWorkRequestBuilder<BackgroundWorker>()
+            .setConstraints(
+                Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+//                  .setRequiresCharging(true)
+                    .build()
+            )
+            .build()
+
+        val continuation = workManager.beginWith(save)
+        continuation.enqueue()
+    }
+
     companion object {
-        const val TAG = "MainViewModel"
+        const val TAG = "MainViewModel "
     }
 }

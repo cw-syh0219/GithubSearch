@@ -26,6 +26,20 @@ class CommitListAdapter :
         holder.bind(position, commits)
     }
 
+    inner class CommitHolder(
+        private val binding: CommitItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        lateinit var commits: Commits
+
+        fun bind(position: Int, commits: Commits) {
+            this.commits = commits
+
+            binding.commitItemMessage.text = commits.commit.message
+            binding.commitItemAuthor.text = commits.commit.author.name
+        }
+    }
+
     companion object {
         private val REPO_COMPARATOR = object : DiffUtil.ItemCallback<Commits>() {
             override fun areItemsTheSame(oldItem: Commits, newItem: Commits): Boolean {
@@ -37,12 +51,4 @@ class CommitListAdapter :
         }
     }
 
-    inner class CommitHolder(binding: ViewBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(position: Int, commits: Commits) {
-            binding.commitItemMessage.text = commits.commit.message
-            binding.commitItemAuthor.text = commits.commit.author.name
-        }
-    }
 }

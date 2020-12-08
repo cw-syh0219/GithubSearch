@@ -6,6 +6,7 @@ import com.example.githubapi.data.local.RepositoryDao
 import com.example.githubapi.data.remote.GithubRemoteDataSource
 import com.example.githubapi.data.remote.GithubService
 import com.example.githubapi.data.repository.GithubRepository
+import com.example.githubapi.util.NonNullTypeAdapter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -35,7 +36,15 @@ object AppModule {
         .build()
 
     @Provides
-    fun provideGson(): Gson = GsonBuilder().create()
+    fun provideGson(): Gson = GsonBuilder().registerTypeAdapter(
+        String::class.java,
+        NonNullTypeAdapter()
+    ).create()
+
+//    @Provides
+//    fun provideGsonFactory(): GsonConverterFactory = GsonConverterFactory.create(
+//
+//    )
 
     @Provides
     fun provideGithubService(retrofit: Retrofit): GithubService =
