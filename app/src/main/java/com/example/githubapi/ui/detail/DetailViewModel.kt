@@ -16,7 +16,7 @@ constructor(
     bundle: Bundle?,
     repository: GithubRepository
 ) : ViewModel() {
-    val repo = bundle?.getParcelable<GithubRepo>(Const.CLICK_REPOSITORY_ITEM)!!
+    val repo: GithubRepo = bundle?.getSerializable(Const.CLICK_REPOSITORY_ITEM) as GithubRepo
     val repoLiveData = liveData<GithubRepo> { emit(repo) }
     var commitList: LiveData<PagingData<Commits>> =
         repository.getCommitList(repo.owner.login, repo.name)

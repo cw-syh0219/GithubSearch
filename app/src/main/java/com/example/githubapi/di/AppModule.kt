@@ -41,19 +41,10 @@ object AppModule {
         NonNullTypeAdapter()
     ).create()
 
-//    @Provides
-//    fun provideGsonFactory(): GsonConverterFactory = GsonConverterFactory.create(
-//
-//    )
 
     @Provides
     fun provideGithubService(retrofit: Retrofit): GithubService =
         retrofit.create(GithubService::class.java)
-
-//    @Singleton
-//    @Provides
-//    fun provideGithubRemoteDataSource(githubService: GithubService) =
-//        GithubRemoteDataSource(githubService)
 
     @Singleton
     @Provides

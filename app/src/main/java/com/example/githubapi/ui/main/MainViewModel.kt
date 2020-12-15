@@ -17,7 +17,6 @@ open class MainViewModel @ViewModelInject constructor(
     application: Application,
     private val repository: GithubRepository
 ) : AndroidViewModel(application) {
-    private lateinit var lastSearch: String
     private var searchFlow: Flow<PagingData<GithubRepo>> = flow { }
     var searchList: MutableLiveData<PagingData<GithubRepo>> = MutableLiveData()
 
@@ -27,11 +26,8 @@ open class MainViewModel @ViewModelInject constructor(
         emitSource(repository.getBookmarkList())
     }
 
-    val workManager = WorkManager.getInstance(getApplication<Application>().applicationContext)
 
     fun findRepository(search: String) {
-        lastSearch = search
-
         viewModelScope.launch {
             searchFlow = repository.findRepository(search)
             searchFlow.cachedIn(viewModelScope).collectLatest {
@@ -85,7 +81,8 @@ open class MainViewModel @ViewModelInject constructor(
         return result
     }
 
-
+    // TODO WorkManger 테스트 코드
+    val workManager = WorkManager.getInstance(application)
     public fun applyWorker() {
         println(TAG + "applyWorker apply worker")
 

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "594359556330",
+    "project_id": "cw-syhwa-githubapi",
+    "storage_bucket": "cw-syhwa-githubapi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594359556330:android:77c11caf66468ae56b9f93",
+        "android_client_info": {
+          "package_name": "com.example.githubapi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594359556330-t9hrosojr0fsfnj3k3hpa5s2latd993i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXTItL8lZOqe_xXgpOTxV3enzk6HT0E8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594359556330-t9hrosojr0fsfnj3k3hpa5s2latd993i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

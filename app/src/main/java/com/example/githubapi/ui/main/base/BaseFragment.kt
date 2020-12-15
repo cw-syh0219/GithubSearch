@@ -62,7 +62,7 @@ abstract class BaseFragment : Fragment(),
     override fun clickedItem(repo: GithubRepo) {
         startActivity(
             Intent(activity, DetailActivity::class.java).apply {
-                putExtra(Const.Companion.CLICK_REPOSITORY_ITEM, repo)
+                putExtra(Const.CLICK_REPOSITORY_ITEM, repo)
             }
         )
     }

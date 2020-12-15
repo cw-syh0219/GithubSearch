@@ -1,7 +1,9 @@
 package com.example.githubapi.ui.main
 
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.TextUtils
+import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
@@ -11,14 +13,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.githubapi.R
 import com.example.githubapi.databinding.MainActivityBinding
 import com.example.githubapi.ui.main.bookmark.BookmarkFragment
 import com.example.githubapi.ui.main.result.ResultFragment
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.Serializable
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,Parcelable, Serializable{
     private lateinit var imm: InputMethodManager
     private val viewModel: MainViewModel by viewModels()
 
@@ -39,6 +45,21 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.bookmarkFlowData.observe(this, Observer {
             println("Default request Bookmark database2")
+        })
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = token as String
+            Log.d(TAG, "TOKEN | " + token)
+            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
         })
     }
 
@@ -89,7 +110,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val VIEW_PAGER_PAGE_COUNT = 2
+        const val TAG = "MainActivity"
     }
+
 
 //    override fun onDestroy() {
 //        super.onDestroy()
