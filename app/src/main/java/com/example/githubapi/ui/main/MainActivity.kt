@@ -1,7 +1,6 @@
 package com.example.githubapi.ui.main
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.text.TextUtils
 import android.util.Log
 import android.view.KeyEvent
@@ -21,10 +20,9 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.Serializable
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() ,Parcelable, Serializable{
+class MainActivity : AppCompatActivity() {
     private lateinit var imm: InputMethodManager
     private val viewModel: MainViewModel by viewModels()
 
