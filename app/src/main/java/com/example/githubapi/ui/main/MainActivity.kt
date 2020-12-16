@@ -11,8 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
+import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.githubapi.R
+import com.example.githubapi.data.local.AppDatabase
 import com.example.githubapi.databinding.MainActivityBinding
 import com.example.githubapi.ui.main.bookmark.BookmarkFragment
 import com.example.githubapi.ui.main.result.ResultFragment
@@ -20,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
