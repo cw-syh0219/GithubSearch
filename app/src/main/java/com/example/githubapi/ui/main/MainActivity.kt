@@ -11,11 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import androidx.room.Room
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.githubapi.data.local.AppDatabase
 import com.example.githubapi.databinding.MainActivityBinding
 import com.example.githubapi.ui.main.bookmark.BookmarkFragment
 import com.example.githubapi.ui.main.result.ResultFragment
@@ -39,30 +35,17 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
         setLayout(binding)
+        registerToken()
 
         viewModel.bookmarkLiveData.observe(this, Observer {
             println("Default request Bookmark database1")
             viewModel.bookmarkList = it
         })
 
-        viewModel.bookmarkFlowData.observe(this, Observer {
-            println("Default request Bookmark database2")
-        })
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            val token = task.result
-
-            // Log and toast
-            val msg = token as String
-            Log.d(TAG, "TOKEN | " + token)
-            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
-        })
+//        viewModel.bookmarkFlowData.observe(this, Observer {
+//            println("Default request Bookmark database2")
+//        })
     }
 
     private fun setLayout(binding: MainActivityBinding) {
@@ -101,6 +84,17 @@ class MainActivity : AppCompatActivity() {
                 1 -> tab.text = "Bookmark"
             }
         }.attach()
+    }
+
+    private fun registerToken() {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+//            Toast.makeText(baseContext, task.result as String, Toast.LENGTH_SHORT).show()
+        })
     }
 
     private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {

@@ -1,16 +1,22 @@
 package com.example.githubapi.ui.main
 
 import android.app.Application
-import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import androidx.paging.*
-import androidx.work.*
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.githubapi.data.entites.GithubRepo
 import com.example.githubapi.data.repository.GithubRepository
 import com.example.githubapi.util.workManager.BackgroundWorker
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 open class MainViewModel @ViewModelInject constructor(
@@ -21,7 +27,8 @@ open class MainViewModel @ViewModelInject constructor(
     var searchList: MutableLiveData<PagingData<GithubRepo>> = MutableLiveData()
 
     var bookmarkList: List<GithubRepo> = mutableListOf()
-    val bookmarkFlowData = repository.getBookmarkFlow().asLiveData(Dispatchers.IO)
+    val bookmarkFlowData =
+        repository.getBookmarkFlow().cachedIn(viewModelScope).asLiveData(Dispatchers.IO)
     val bookmarkLiveData = liveData(Dispatchers.IO) {
         emitSource(repository.getBookmarkList())
     }
@@ -82,7 +89,6 @@ open class MainViewModel @ViewModelInject constructor(
     }
 
     // TODO WorkManger 테스트 코드
-    val workManager = WorkManager.getInstance(application)
     public fun applyWorker() {
         println(TAG + "applyWorker apply worker")
 
@@ -95,7 +101,7 @@ open class MainViewModel @ViewModelInject constructor(
             )
             .build()
 
-        val continuation = workManager.beginWith(save)
+        val continuation = WorkManager.getInstance(getApplication()).beginWith(save)
         continuation.enqueue()
     }
 
